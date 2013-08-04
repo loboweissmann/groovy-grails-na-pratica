@@ -7,3 +7,4 @@
 *.ear
 target/*
 eclipse-target/*
+target/**
