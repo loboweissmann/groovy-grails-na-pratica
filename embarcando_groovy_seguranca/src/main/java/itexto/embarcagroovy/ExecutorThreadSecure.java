@@ -1,7 +1,6 @@
 package itexto.embarcagroovy;
 
 import groovy.lang.Binding;
-import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 
 import java.io.File;
@@ -15,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -25,7 +25,13 @@ import java.util.concurrent.TimeoutException;
  */
 public class ExecutorThreadSecure implements Executor {
 
-	private ExecutorService pool = Executors.newFixedThreadPool(4);
+	private ExecutorService pool = Executors.newFixedThreadPool(3, new ThreadFactory(){
+
+		@Override
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "ScriptThread");
+			
+		}});
 	
 	public ExecutorThreadSecure() {
 		
@@ -46,7 +52,7 @@ public class ExecutorThreadSecure implements Executor {
 		Policy.setPolicy(new ScriptPolicy());
 		if (System.getSecurityManager() == null) {
 			System.out.println("Nenhum security manager definido. Defino um!");
-			System.setSecurityManager(new SecurityManager());
+			System.setSecurityManager(new GroovySecurityManager());
 			
 		}
 	}
@@ -55,7 +61,7 @@ public class ExecutorThreadSecure implements Executor {
 	public Object execute(String input, Operacao operacao) {
 		Future<Object> future = pool.submit(new ScriptRunner(input, operacao));
 		try {
-			return future.get(3, TimeUnit.SECONDS);
+			return future.get(10, TimeUnit.SECONDS);
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			e.printStackTrace();
 			future.cancel(true);
