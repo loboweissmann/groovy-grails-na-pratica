@@ -23,7 +23,8 @@ public class FormMain extends JFrame {
 	private JButton btnExecutar;
 	private JTextArea txtResultado;
 	
-	private Executor executor = new ExecutorThread();
+	private Executor executor = new ExecutorThreadSecure();
+	
 	
 	public FormMain() {
 		setTitle("Embarcando Groovy - melhorando a segurança");

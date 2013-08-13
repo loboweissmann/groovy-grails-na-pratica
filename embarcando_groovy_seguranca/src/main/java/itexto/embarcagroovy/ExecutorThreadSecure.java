@@ -35,20 +35,7 @@ public class ExecutorThreadSecure implements Executor {
 	
 	public ExecutorThreadSecure() {
 		
-		File diretorioDestino = new File("/scriptsKico");
-		diretorioDestino.mkdirs();
-		for (Operacao operacao : Operacao.values()) {
-			File arquivoDestino = new File(diretorioDestino.getAbsolutePath() + "/" + operacao.getArquivo());
-			try (InputStream is = getClass().getClassLoader().getResourceAsStream(operacao.getArquivo()); 
-				 OutputStream os = new FileOutputStream(arquivoDestino)) {
-				int c = -1;
-				while ((c = is.read()) != -1) {
-					os.write(c);
-				}
-			} catch (IOException ex) {
-				
-			}
-		}
+		
 		Policy.setPolicy(new ScriptPolicy());
 		if (System.getSecurityManager() == null) {
 			System.out.println("Nenhum security manager definido. Defino um!");

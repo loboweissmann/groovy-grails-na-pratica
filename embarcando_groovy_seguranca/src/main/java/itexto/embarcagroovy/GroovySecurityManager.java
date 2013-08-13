@@ -1,17 +1,8 @@
 package itexto.embarcagroovy;
 
-
-
-
 public class GroovySecurityManager extends SecurityManager {
 	
 	
-	
-	private final SecurityManager parent = new SecurityManager();
-	
-	public GroovySecurityManager() {
-		
-	}
 	
 	/**
 	 * Verifica se a thread em execução é a que executa os scripts
@@ -27,9 +18,7 @@ public class GroovySecurityManager extends SecurityManager {
 			if (! file.contains("Liberados")) {
 				throw new SecurityException("Apenas os liberados podem ser acessados!");
 			}
-		} else {
-			super.checkRead(file);
-		}
+		} 
 	}
 	
 	public void checkWrite(final String file) {
@@ -41,11 +30,10 @@ public class GroovySecurityManager extends SecurityManager {
 	}
 	
 	public void checkRead(final String file) {
-		if (isScriptThread() && file.contains("Liberados")) {
-			return;
-		}
-		super.checkRead(file);
+		
 	}
+	
+	
 	
 	public void checkExit(final int code) {
 		super.checkExit(code);
